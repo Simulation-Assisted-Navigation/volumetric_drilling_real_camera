@@ -73,6 +73,7 @@ int afCameraHMD::init(const afBaseObjectPtr a_afObjectPtr, const afBaseObjectAtt
     para_rosNode2 = afROSNode::getNode();
     para_rosNode3 = afROSNode::getNode();
     para_rosNode4 = afROSNode::getNode();
+    para_rosNode5 = afROSNode::getNode();
 
     // sub = m_rosNode->subscribe("/ambf/env/cameras/stereoL/ImageData", 2, &afCameraHMD::imageCallback, this);
     // sub = m_rosNode->subscribe("/decklink_left/camera/image_raw", 2, &afCameraHMD::imageCallback, this);
@@ -90,6 +91,7 @@ int afCameraHMD::init(const afBaseObjectPtr a_afObjectPtr, const afBaseObjectAtt
     sub5 = para_rosNode2->subscribe("/volumetric/camera_params/dist_params2", 2, &afCameraHMD::floatCallback2,this);
     sub6 = para_rosNode3->subscribe("/volumetric/camera_params/dist_params3", 2, &afCameraHMD::floatCallback3,this);
     sub7 = para_rosNode4->subscribe("/volumetric/camera_params/dist_params4", 2, &afCameraHMD::floatCallback4,this);
+    sub8 = para_rosNode5->subscribe("/volumetric/camera_params/dist_params5", 2, &afCameraHMD::floatCallback5,this);
 
     m_camera = (afCameraPtr)a_afObjectPtr;
     m_camera->setOverrideRendering(true);
@@ -165,11 +167,11 @@ int afCameraHMD::init(const afBaseObjectPtr a_afObjectPtr, const afBaseObjectAtt
     m_right_lens_center[0] = m_sep / 2.0;
     m_right_lens_center[1] = m_vpos;
 
-    m_left_lens_center2[0] = m_viewport_scale[0] - m_sep / 2.0-0.01;
+    m_left_lens_center2[0] = m_viewport_scale[0] - m_sep / 2.0-windowpos_left;
     // m_left_lens_center2[0] = m_viewport_scale[0] - m_sep / 2.0;
     m_left_lens_center2[1] = m_vpos2;
 
-    m_right_lens_center2[0] = m_sep / 2.0-0.018;
+    m_right_lens_center2[0] = m_sep / 2.0-0.03;//windowpos_right;
     // m_right_lens_center2[0] = m_sep / 2.0;
     m_right_lens_center2[1] = m_vpos2;
 
@@ -262,7 +264,15 @@ void afCameraHMD::floatCallback3(const std_msgs::Float32::ConstPtr& msg)
 void afCameraHMD::floatCallback4(const std_msgs::Float32::ConstPtr& msg)
 {
     // ROS_INFO_STREAM("1");
-    clipsize = msg->data;
+    windowpos_left = msg->data;
+    m_left_lens_center2[0] = m_viewport_scale[0] - m_sep / 2.0f-windowpos_left;
+}
+
+void afCameraHMD::floatCallback5(const std_msgs::Float32::ConstPtr& msg)
+{
+    // ROS_INFO_STREAM("1");
+    windowpos_right = msg->data;
+    m_right_lens_center2[0] = m_sep / 2.0f-windowpos_right;
 }
 
 void afCameraHMD::KVCallback(const diagnostic_msgs::KeyValue::ConstPtr& msg)

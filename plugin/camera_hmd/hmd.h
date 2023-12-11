@@ -65,6 +65,7 @@ public:
     void floatCallback2(const std_msgs::Float32::ConstPtr& msg);
     void floatCallback3(const std_msgs::Float32::ConstPtr& msg);
     void floatCallback4(const std_msgs::Float32::ConstPtr& msg);
+    void floatCallback5(const std_msgs::Float32::ConstPtr& msg);
     void KVCallback(const diagnostic_msgs::KeyValue::ConstPtr& msg);
 
     // void imageCallback(const sensor_msgs::CompressedImage::ConstPtr& msg);
@@ -112,12 +113,15 @@ protected:
     ros::NodeHandle* para_rosNode2;
     ros::NodeHandle* para_rosNode3;
     ros::NodeHandle* para_rosNode4;
-    ros::Subscriber sub, sub2, sub3, sub4, sub5, sub6, sub7;
+    ros::NodeHandle* para_rosNode5;
+    ros::Subscriber sub, sub2, sub3, sub4, sub5, sub6, sub7, sub8;
     cv_bridge::CvImagePtr cv_ptr, cv_ptr2;
     // cv::Mat frame, frame2;
     cTexture2dPtr m_rosImageTexture;
     int clipsize=0.3;
-    int mode=2;
+    int mode=3;
+    float windowpos_left=0.01;
+    float windowpos_right=0.018;
 };
 
 
