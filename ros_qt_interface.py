@@ -58,7 +58,8 @@ class SlidersBlock:
         self.sliders_list.append(CustomSlider(self, "a=", (0, 100), 7.0, 15.0))
         self.sliders_list.append(CustomSlider(self, "b=", (0, 100), 10.0, 20.0))
         self.sliders_list.append(CustomSlider(self, "c=", (0, 100),3, 10.0))
-        self.sliders_list.append(CustomSlider(self, "eye_speration=", (0, 100),30, 70))
+        self.sliders_list.append(CustomSlider(self, "window_left:", (0, 100),0,0.03))
+        self.sliders_list.append(CustomSlider(self, "window_right:", (0, 100),0,0.03))
 
         for idx, custom_slider in enumerate(self.sliders_list):
             self.grid_layout.addWidget(custom_slider.slider_label, idx, 0)
@@ -80,7 +81,8 @@ class SlidersBlock:
         b = self.sliders_list[1].get_current_value()
         c = self.sliders_list[2].get_current_value()
         d = self.sliders_list[3].get_current_value()
-        self.publisher.pub_dist_params(a, b, c, d) 
+        e = self.sliders_list[4].get_current_value()
+        self.publisher.pub_dist_params(a, b, c, d, e) 
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -136,7 +138,7 @@ class MainWindow(QMainWindow):
 
         # Window config.
         self.setCentralWidget(container)
-        self.setFixedSize(QSize(400, 300))
+        self.setFixedSize(QSize(400, 400))
 
     def fmt_label(self, widget):
         font = widget.font()
@@ -179,6 +181,7 @@ class ParamPublisher:
         self.dist_pub2 = rospy.Publisher(base_topic+'dist_params2', Float32, queue_size=10)
         self.dist_pub3 = rospy.Publisher(base_topic+'dist_params3', Float32, queue_size=10)
         self.dist_pub4 = rospy.Publisher(base_topic+'dist_params4', Float32, queue_size=10)
+        self.dist_pub5 = rospy.Publisher(base_topic+'dist_params5', Float32, queue_size=10)
         rospy.init_node('talker', anonymous=True)
         rate = rospy.Rate(10) # 10hz
     
@@ -189,12 +192,13 @@ class ParamPublisher:
         self.mode_pub.publish(message)
         #self.mode_pub.publish(KeyValue(key="op_mode", value=mode))
     
-    def pub_dist_params(self, a, b, c, d):
+    def pub_dist_params(self, a, b, c, d, e):
         #self.dist_pub.publish(Joy(header=None, axes=[a, b, c], buttons=[]))
         self.dist_pub1.publish(a)
         self.dist_pub2.publish(b)
         self.dist_pub3.publish(c)
         self.dist_pub4.publish(d)
+        self.dist_pub5.publish(e)
 
 def main():
     app = QApplication(sys.argv)
